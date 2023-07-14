@@ -11,7 +11,7 @@ $All_PS_Students_Alphabetized = Import-CSV -Path "C:\Users\rviglione\Desktop\CSV
 
 $All_PS_Students_Alphabetized_Get_Content = Get-Content -Path "C:\Users\rviglione\Desktop\CSV-Comparison\All-Student-Numbers.csv"
 
-$Students_OU = "OU=Students, OU=UserAccounts, DC=, DC="
+$Students_OU = "OU=Students, OU=UserAccounts, DC=westbrookctschools, DC=org"
 
 $Students_With_Number = Get-ADUser -Filter 'employeeNumber -like "*"' -SearchBase $Students_OU | Measure-Object | Select-Object -expand Count 
 
@@ -72,15 +72,6 @@ foreach ($Line in $All_AD_Students_Alphabetized)
     
     }
 
-    <#
-    
-    Set-ADUser -Identity $SAM_Account_Name -EmployeeNumber $Employee_Number
-
-    $Employee_Number_Input = Get-ADUser -Filter "SamAccountName -like '$Sam_Account_Name'" -Properties EmployeeNumber | Select-Object -expand EmployeeNumber
-
-    Write-Host "Employee Number changed to $Employee_Number_Input for $Sam_Account_Name" -ForegroundColor Green
-
-    #>
     }
 
     }
