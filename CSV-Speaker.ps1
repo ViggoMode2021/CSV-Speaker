@@ -11,7 +11,7 @@ $All_PS_Students_Alphabetized = Import-CSV -Path "C:\Users\rviglione\Desktop\CSV
 
 $All_PS_Students_Alphabetized_Get_Content = Get-Content -Path "C:\Users\rviglione\Desktop\CSV-Comparison\All-Student-Numbers.csv"
 
-$Students_OU = "OU=Students, OU=UserAccounts, DC=westbrookctschools, DC=org"
+$Students_OU = "OU=Students, OU=UserAccounts, DC=, DC=org"
 
 $Students_With_Number = Get-ADUser -Filter 'employeeNumber -like "*"' -SearchBase $Students_OU | Measure-Object | Select-Object -expand Count 
 
