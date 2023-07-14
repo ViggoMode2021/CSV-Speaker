@@ -21,7 +21,7 @@ foreach ($Line in $All_AD_Students_Alphabetized)
 {
 	$Name = $Line.Name
 	$Employee_Number = $Line.EmployeeNumber
-    $SAM_Account_Name = $Line.SamAccountName
+    	$SAM_Account_Name = $Line.SamAccountName
 
 	Write-Host $Name
 	Write-Host $Employee_Number
