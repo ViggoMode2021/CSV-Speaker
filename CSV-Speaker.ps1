@@ -11,7 +11,11 @@ $All_PS_Students_Alphabetized = Import-CSV -Path "C:\Users\rviglione\Desktop\CSV
 
 $All_PS_Students_Alphabetized_Get_Content = Get-Content -Path "C:\Users\rviglione\Desktop\CSV-Comparison\All-Student-Numbers.csv"
 
-#$speak.Speak("There are $Students_With_Number students with employee numbers in Active Directory and 611 students total that need employee numbers")
+$Students_OU = "OU=Students, OU=UserAccounts, DC=, DC="
+
+$Students_With_Number = Get-ADUser -Filter 'employeeNumber -like "*"' -SearchBase $Students_OU | Measure-Object | Select-Object -expand Count 
+
+Write-Host "There are $Students_With_Number students with employee numbers in Active Directory and 611 in PowerSchool" -ForegroundColor "Cyan"
 
 foreach ($Line in $All_AD_Students_Alphabetized) 
 {
@@ -24,6 +28,14 @@ foreach ($Line in $All_AD_Students_Alphabetized)
 	$speak.Speak($Name)
 	$speak.Speak($Employee_Number)
 
+    $Students_With_Number = Get-ADUser -Filter 'employeeNumber -like "*"' -SearchBase $Students_OU | Measure-Object | Select-Object -expand Count 
+
+    Write-Host "There are $Students_With_Number students with employee numbers in Active Directory and 611 in PowerSchool" -ForegroundColor "Cyan"
+
+    $Number_Left = 611 - $Students_With_Number 
+
+    Write-Host "There are $Number_Left students left to add to Active Directory from the PowerSchool CSV" -ForeGroundColor "Yellow"
+
     if($Employee_Number -eq ""){
 
     $speak.Speak("$Name does not have an employee number, looking it up in other CSV")
@@ -35,8 +47,6 @@ foreach ($Line in $All_AD_Students_Alphabetized)
     $Name_In_Other_CSV = $Name_Find.Substring(0, $Position)
 
     $Employee_Number_In_Other_CSV = $Name_Find.Substring($Position+1)
-
-    Write-Host "$Name_In_Other_CSV is like $Name"
 
     if($Name_In_Other_CSV -match $Name){
 
@@ -53,6 +63,12 @@ foreach ($Line in $All_AD_Students_Alphabetized)
     $Employee_Number_Input = Get-ADUser -Filter "SamAccountName -like '$Sam_Account_Name'" -Properties EmployeeNumber | Select-Object -expand EmployeeNumber
 
     Write-Host "Employee Number changed to $Employee_Number_Input for $Name" -ForegroundColor Green
+
+    $Students_With_Number = Get-ADUser -Filter 'employeeNumber -like "*"' -SearchBase $Students_OU | Measure-Object | Select-Object -expand Count 
+
+    Write-Host "There are $Students_With_Number students with employee numbers in Active Directory" -ForegroundColor "Cyan"
+
+    $speak.Speak("$Students_With_Number students with employee numbers in AD ")
     
     }
 
@@ -74,11 +90,5 @@ foreach ($Line in $All_AD_Students_Alphabetized)
     if($All_PS_Students_Alphabetized -notcontains $Name){
 
     $speak.Speak("$Name is not in All PowerSchool students CSV")
-
     
     }
-
-<#
-
-
-#>
