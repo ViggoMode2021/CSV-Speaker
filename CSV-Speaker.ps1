@@ -3,19 +3,22 @@ Import-Module ActiveDirectory
 Add-Type -AssemblyName System.Speech
 
 Add-Type -AssemblyName System.Speech
+
+$Desktop = [Environment]::GetFolderPath("Desktop")
+
 $speak = New-Object System.Speech.Synthesis.SpeechSynthesizer
 
-$All_AD_Students_Alphabetized = Import-CSV -Path "C:\Users\rviglione\Desktop\CSV-Comparison\All-AD-Students-Alphabetized.csv"
+$All_AD_Students_Alphabetized = Import-CSV -Path "$Desktop\CSV-Comparison\All-AD-Students-Alphabetized.csv" # Contains a list of all students in AD with their employee numbers (null and not null), as well as their SAM account name.
 
-$All_PS_Students_Alphabetized = Import-CSV -Path "C:\Users\rviglione\Desktop\CSV-Comparison\All-Student-Numbers.csv"
+$All_PS_Students_Alphabetized = Import-CSV -Path "$Desktop\CSV-Comparison\All-Student-Numbers.csv" # Exported list from PowerSchool of all students and their student_number 
 
-$All_PS_Students_Alphabetized_Get_Content = Get-Content -Path "C:\Users\rviglione\Desktop\CSV-Comparison\All-Student-Numbers.csv"
+$All_PS_Students_Alphabetized_Get_Content = Get-Content -Path "$Desktop\CSV-Comparison\All-Student-Numbers.csv"
 
-$Students_OU = "OU=Students, OU=UserAccounts, DC=, DC=org"
+$Students_OU = "OU=, OU=, DC=, DC="
 
-$Students_With_Number = Get-ADUser -Filter 'employeeNumber -like "*"' -SearchBase $Students_OU | Measure-Object | Select-Object -expand Count 
+$Students_With_Number = Get-ADUser -Filter 'employeeNumber -like "*"' -SearchBase $Students_OU | Measure-Object | Select-Object -expand Count # Counts students with employee numbers in AD
 
-Write-Host "There are $Students_With_Number students with employee numbers in Active Directory and 611 in PowerSchool" -ForegroundColor "Cyan"
+Write-Host "There are $Students_With_Number students with employee numbers in Active Directory and 611 in PowerSchool" -ForegroundColor "Cyan" # We know there are 611 students enrolled in the district as per the PowerSchool report
 
 foreach ($Line in $All_AD_Students_Alphabetized) 
 {
